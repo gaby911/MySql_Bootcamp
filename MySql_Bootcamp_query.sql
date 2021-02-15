@@ -353,3 +353,493 @@ select curdate();
 Select dayofweek(now()); 
 
 Select date_format(now(), '%W'); 
+
+select title,released_year from books where released_year!= 2017;
+
+SELECT title FROM books WHERE title not LIKE 'W%'; 
+
+SELECT title, author_lname FROM books WHERE author_lname = 'Eggers'; 
+
+SELECT title, author_lname FROM books WHERE author_lname = 'eggers';
+
+SELECT title, author_lname FROM books WHERE author_lname = 'eGGers';
+
+SELECT title, author_lname, released_year FROM books WHERE author_lname='Eggers' AND released_year > 2010; 
+
+SELECT * FROM books WHERE author_lname='Eggers' AND released_year > 2010 AND title LIKE '%novel%';
+
+SELECT title, author_lname, released_year FROM books WHERE author_lname='Eggers' || released_year > 2010; 
+
+SELECT title, author_lname, released_year, stock_quantity FROM books WHERE author_lname = 'Eggers' || released_year > 2010 OR stock_quantity > 100; 
+
+SELECT title, released_year FROM books WHERE released_year >= 2004 && released_year <= 2015; 
+
+SELECT title, released_year FROM books WHERE released_year BETWEEN 2004 AND 2015; 
+SELECT title, released_year FROM books WHERE released_year NOT BETWEEN 2004 AND 2015; 
+
+SELECT CAST('2017-05-02' AS DATETIME);
+
+SELECT title, author_lname FROM books WHERE author_lname='Carver' OR author_lname='Lahiri' OR author_lname='Smith'; 
+
+SELECT title, author_lname FROM books WHERE author_lname IN ('Carver', 'Lahiri', 'Smith'); 
+
+SELECT title, released_year FROM books
+WHERE released_year IN (2017, 1985);
+
+SELECT title, released_year FROM books WHERE released_year != 2000 AND released_year != 2002 AND released_year != 2004 AND released_year != 2006 AND released_year != 2008 AND released_year != 2010 AND released_year != 2012 AND released_year != 2014 AND released_year != 2016; 
+
+SELECT title, released_year FROM books WHERE released_year >= 2000 AND released_year NOT IN (2000,2002,2004,2006,2008,2010,2012,2014,2016); 
+
+SELECT title, released_year FROM books 
+WHERE released_year >= 2000 AND 
+released_year % 2 != 0; 
+
+SELECT title, released_year FROM books 
+WHERE released_year >= 2000 AND 
+released_year % 2 != 0 ORDER BY released_year; 
+
+SELECT title, released_year, CASE WHEN released_year >= 2000 THEN 'Modern Lit' ELSE '20th Century Lit' END AS GENRE FROM books; 
+
+SELECT title, stock_quantity,
+    CASE 
+        WHEN stock_quantity BETWEEN 0 AND 50 THEN '*'
+        WHEN stock_quantity BETWEEN 51 AND 100 THEN '**'
+        ELSE '***'
+    END AS STOCK
+FROM books;
+
+SELECT title, released_year,
+       CASE 
+         WHEN released_year >= 2000 THEN 'Modern Lit'
+         ELSE '20th Century Lit'
+       END AS GENRE
+FROM books;
+
+SELECT title,
+    CASE 
+        WHEN stock_quantity BETWEEN 0 AND 50 THEN '*'
+        WHEN stock_quantity BETWEEN 51 AND 100 THEN '**'
+        ELSE '***'
+    END AS STOCK
+FROM books;
+
+SELECT title, stock_quantity,
+    CASE 
+        WHEN stock_quantity BETWEEN 0 AND 50 THEN '*'
+        WHEN stock_quantity BETWEEN 51 AND 100 THEN '**'
+        WHEN stock_quantity BETWEEN 101 AND 150 THEN '***'
+        ELSE '****'
+    END AS STOCK
+FROM books;
+
+SELECT title, stock_quantity,
+    CASE 
+        WHEN stock_quantity <= 50 THEN '*'
+        WHEN stock_quantity <= 100 THEN '**'
+        ELSE '***'
+    END AS STOCK
+FROM books; 
+
+select * from books;
+
+select * from books where released_year <1980;
+
+select * from books where 	author_lname='Eggers' or author_lname='Chabon';
+SELECT title, author_lname FROM books WHERE author_lname IN ('Eggers','Chabon');
+
+
+select * from books where author_lname='Lahiri' and released_year>2000;	
+
+
+select * from books where pages between 100 and 200;
+
+select * from books where author_lname like'C%' or author_lname like'S%';
+
+	select *, 
+		case
+			when title like '%stories%' then 'Short Stories'
+			when title like '%Just Kids%' or title like '%A Heartbreaking Work%' then 'Memoir'
+			else 'Novel'
+		end as TYPE
+	from books;
+
+select title, author_lname, 
+	case 
+		when count(author_lname) >=2 then concat(count(author_lname), ' books')
+		else concat(count(author_lname), ' book')
+	end as COUNT
+from books group by author_lname;
+
+CREATE TABLE customers( 
+id INT AUTO_INCREMENT PRIMARY KEY, 
+first_name VARCHAR(100), 
+last_name VARCHAR(100),
+ email VARCHAR(100) );  
+ 
+CREATE TABLE orders( 
+id INT AUTO_INCREMENT PRIMARY KEY, 
+order_date DATE, 
+amount DECIMAL(8,2), 
+customer_id INT, 
+FOREIGN KEY(customer_id) REFERENCES customers(id) );
+
+INSERT INTO customers (first_name, last_name, email) 
+VALUES ('Boy', 'George', 'george@gmail.com'),
+       ('George', 'Michael', 'gm@gmail.com'),
+       ('David', 'Bowie', 'david@gmail.com'),
+       ('Blue', 'Steele', 'blue@gmail.com'),
+       ('Bette', 'Davis', 'bette@aol.com');
+       
+INSERT INTO orders (order_date, amount, customer_id)
+VALUES ('2016/02/10', 99.99, 1),
+       ('2017/11/11', 35.50, 1),
+       ('2014/12/12', 800.67, 2),
+       ('2015/01/03', 12.50, 2),
+       ('1999/04/11', 450.25, 5);
+       
+       select * from customers;
+       
+       SELECT * FROM customers, orders; 
+       
+       select * from orders;
+       
+       SELECT * FROM customers, orders 
+WHERE customers.id = orders.customer_id;
+
+SELECT first_name, last_name, order_date, amount
+FROM customers, orders 
+    WHERE customers.id = orders.customer_id;
+    
+    
+    SELECT * FROM customers
+JOIN orders
+    ON customers.id = orders.customer_id;
+    
+SELECT first_name, last_name, order_date, amount 
+FROM customers
+JOIN orders
+    ON customers.id = orders.customer_id;
+    
+    SELECT *
+FROM orders
+JOIN customers
+    ON customers.id = orders.customer_id;
+    
+    SELECT * FROM customers  
+JOIN orders  
+ON customers.id = orders.id; 
+
+
+SELECT first_name, last_name, order_date, amount 
+FROM customers
+JOIN orders
+    ON customers.id = orders.customer_id
+ORDER BY order_date;
+
+SELECT 
+    first_name, 
+    last_name, 
+    SUM(amount) AS total_spent
+FROM customers
+JOIN orders
+    ON customers.id = orders.customer_id
+GROUP BY orders.customer_id
+ORDER BY total_spent DESC;
+
+
+SELECT * FROM customers
+LEFT JOIN orders
+    ON customers.id = orders.customer_id;
+    
+
+SELECT first_name, last_name, order_date, amount FROM customers 
+LEFT JOIN orders  
+  ON customers.id = orders.customer_id;  
+  
+  
+  SELECT 
+    first_name, 
+    last_name,
+    IFNULL(SUM(amount), 0) AS total_spent
+FROM customers
+LEFT JOIN orders
+    ON customers.id = orders.customer_id
+GROUP BY customers.id
+ORDER BY total_spent;
+
+SELECT * FROM customers
+LEFT JOIN orders
+	ON customers.id = orders.customer_id;
+
+SELECT * FROM customers
+INNER JOIN orders
+	ON customers.id = orders.customer_id;
+    
+SELECT * FROM customers
+RIGHT JOIN orders
+	ON customers.id = orders.customer_id;
+    
+SELECT 
+    IFNULL(first_name,'MISSING') AS first, 
+    IFNULL(last_name,'USER') as last, 
+    order_date, 
+    amount, 
+    SUM(amount)
+FROM customers
+RIGHT JOIN orders
+    ON customers.id = orders.customer_id
+GROUP BY first_name, last_name;
+
+SELECT * FROM customers
+LEFT JOIN orders
+    ON customers.id = orders.customer_id;
+    
+    SELECT * FROM orders
+RIGHT JOIN customers
+    ON customers.id = orders.customer_id; 
+    
+SELECT * FROM orders
+LEFT JOIN customers
+    ON customers.id = orders.customer_id;    
+    
+SELECT * FROM customers
+RIGHT JOIN orders
+    ON customers.id = orders.customer_id;
+    
+    
+SELECT * FROM orders
+INNER JOIN customers
+	ON customers.id = orders.customer_id;
+    
+    
+create table students (
+id int primary key AUTO_INCREMENT,
+first_name VARCHAR(100)
+);
+
+create table papers (
+title VARCHAR(100),
+grade int,
+student_id int,
+FOREIGN KEY (student_id) references students(id) on delete cascade
+);
+
+INSERT INTO students (first_name) VALUES 
+('Caleb'), 
+('Samantha'), 
+('Raj'), 
+('Carlos'), 
+('Lisa');
+
+INSERT INTO papers (student_id, title, grade ) VALUES
+(1, 'My First Book Report', 60),
+(1, 'My Second Book Report', 75),
+(2, 'Russian Lit Through The Ages', 94),
+(2, 'De Montaigne and The Art of The Essay', 98),
+(4, 'Borges and Magical Realism', 89);
+
+select first_name, title, grade from students
+Inner Join papers
+on students.id=papers.student_id
+order by first_name desc;
+
+
+select first_name, title, grade from students
+left Join papers
+on students.id=papers.student_id;
+
+select 
+		first_name, 
+		ifnull(title,'MISSING') as title, 
+        ifnull(grade, '0') as grade
+from students
+left Join papers
+on students.id=papers.student_id;
+
+
+select 
+		first_name, 
+		ifnull(avg(grade),0) as average
+from students
+left Join papers
+on students.id=papers.student_id
+group by first_name;
+
+
+select 
+		first_name, 
+		ifnull(avg(grade),0) as average,
+        case
+			when avg(grade) > 75 then "PASSING"
+            else "FAILING"
+		end as passing_status
+from students
+left Join papers
+on students.id=papers.student_id
+group by first_name
+order by avg(grade) desc;
+
+SELECT first_name, 
+       Ifnull(Avg(grade), 0) AS average, 
+       CASE 
+         WHEN Avg(grade) IS NULL THEN 'FAILING' 
+         WHEN Avg(grade) >= 75 THEN 'PASSING' 
+         ELSE 'FAILING' 
+       end                   AS passing_status 
+FROM   students 
+       LEFT JOIN papers 
+              ON students.id = papers.student_id 
+GROUP  BY students.id 
+ORDER  BY average DESC;
+
+create DATABASE ReviewersMovies;
+drop database reviewrsMovies;
+
+use ReviewersMovies;
+
+create table reviewers(
+	id int AUTO_INCREMENT PRIMARY KEY,
+    first_name varchar(100),
+    last_name varchar(100)
+);
+
+create table series(
+id int AUTO_INCREMENT PRIMARY KEY,
+title VARCHAR(100),
+released_year year(4),
+genre VARCHAR(100)
+);
+
+drop table seriers;
+INSERT INTO series (title, released_year, genre) VALUES
+    ('Archer', 2009, 'Animation'),
+    ('Arrested Development', 2003, 'Comedy'),
+    ("Bob's Burgers", 2011, 'Animation'),
+    ('Bojack Horseman', 2014, 'Animation'),
+    ("Breaking Bad", 2008, 'Drama'),
+    ('Curb Your Enthusiasm', 2000, 'Comedy'),
+    ("Fargo", 2014, 'Drama'),
+    ('Freaks and Geeks', 1999, 'Comedy'),
+    ('General Hospital', 1963, 'Drama'),
+    ('Halt and Catch Fire', 2014, 'Drama'),
+    ('Malcolm In The Middle', 2000, 'Comedy'),
+    ('Pushing Daisies', 2007, 'Comedy'),
+    ('Seinfeld', 1989, 'Comedy'),
+    ('Stranger Things', 2016, 'Drama');
+
+
+INSERT INTO reviewers (first_name, last_name) VALUES
+    ('Thomas', 'Stoneman'),
+    ('Wyatt', 'Skaggs'),
+    ('Kimbra', 'Masters'),
+    ('Domingo', 'Cortes'),
+    ('Colt', 'Steele'),
+    ('Pinkie', 'Petit'),
+    ('Marlon', 'Crafford');
+    
+    
+    select * from reviewers;
+    
+    create table reviews(
+    id int AUTO_INCREMENT primary key,
+    rating decimal(2,1),
+    series_id int,
+    reviewer_id int,
+    FOREIGN KEY (series_id) REFERENCES series(id),
+    FOREIGN KEY (reviewer_id) REFERENCES reviewers(id)
+    );
+    
+    
+
+    
+    INSERT INTO reviews(series_id, reviewer_id, rating) VALUES
+    (1,1,8.0),(1,2,7.5),(1,3,8.5),(1,4,7.7),(1,5,8.9),
+    (2,1,8.1),(2,4,6.0),(2,3,8.0),(2,6,8.4),(2,5,9.9),
+    (3,1,7.0),(3,6,7.5),(3,4,8.0),(3,3,7.1),(3,5,8.0),
+    (4,1,7.5),(4,3,7.8),(4,4,8.3),(4,2,7.6),(4,5,8.5),
+    (5,1,9.5),(5,3,9.0),(5,4,9.1),(5,2,9.3),(5,5,9.9),
+    (6,2,6.5),(6,3,7.8),(6,4,8.8),(6,2,8.4),(6,5,9.1),
+    (7,2,9.1),(7,5,9.7),
+    (8,4,8.5),(8,2,7.8),(8,6,8.8),(8,5,9.3),
+    (9,2,5.5),(9,3,6.8),(9,4,5.8),(9,6,4.3),(9,5,4.5),
+    (10,5,9.9),
+    (13,3,8.0),(13,4,7.2),
+    (14,2,8.5),(14,3,8.9),(14,4,8.9);
+    
+    select * from reviews;
+    
+select title, rating from series
+join reviews
+	on series.id = reviews.series_id;
+    
+    
+select title, avg(rating) as avg_rating from series
+join reviews
+	on series.id = reviews.series_id
+GROUP BY series.id
+ORDER BY avg_rating;
+
+select first_name, last_name, rating from reviewers
+JOIN reviews 
+	on reviewers.id = reviews.reviewer_id;
+    
+    
+select title as unreviewed_series 
+from series
+left join reviews 
+	on series.id= reviews.series_id
+where rating is null;
+
+select genre, 
+		round(avg(rating),2) as avg_rating 
+from series
+join reviews
+	on series.id = reviews.series_id
+GROUP BY genre;
+
+
+select 
+	first_name,
+    last_name,
+    count(rating) as COUNT,
+    ifnull(min(rating),0) as MIN,
+    ifnull(max(rating),0) as MAX,
+    ifnull(avg(rating),0)  as AVG,
+    case 
+		when count(rating) >=1 then 'ACTIVE'
+        else 'INACTIVE'
+    end as STATUS
+from reviewers
+left join reviews
+	on reviewers.id = reviews.reviewer_id
+GROUP BY reviewers.id;
+
+
+select 
+	first_name,
+    last_name,
+    count(rating) as COUNT,
+    ifnull(min(rating),0) as MIN,
+    ifnull(max(rating),0) as MAX,
+    round(ifnull(avg(rating),0),2)  as AVG,
+    case 
+		when count(rating) >=10 then 'POWER USER'
+        when count(rating) >=0 then 'ACTIVE'
+        else 'INACTIVE'
+    end as STATUS
+from reviewers
+left join reviews
+	on reviewers.id = reviews.reviewer_id
+GROUP BY reviewers.id;
+
+
+select title,
+	rating,
+    concat(first_name, ' ', last_name) as reviwer
+from reviewers
+join reviews
+	on reviewers.id = reviews.reviewer_id
+join series 
+	on series.id = reviews.series_id
+ORDER BY title;
+    
