@@ -1048,3 +1048,83 @@ GROUP  BY provider
 ORDER  BY total_users DESC; 
 
 
+-- Triggers-- 
+	
+create database trigger_demo;
+
+use trigger_demo;
+
+create table users(
+	username varchar(100),
+    age int
+);
+
+drop table users;
+
+insert into users (username, age) values ("bobby", 23);
+
+-- Example 1
+DELIMITER $$
+
+CREATE TRIGGER must_be_adult
+     BEFORE INSERT ON users FOR EACH ROW
+     BEGIN
+          IF NEW.age < 18
+          THEN
+              SIGNAL SQLSTATE '45000'
+                    SET MESSAGE_TEXT = 'Must be an adult!';
+          END IF;
+     END;
+$$
+
+DELIMITER ;
+
+insert into users (username, age) values ("sue", 54);
+
+-- Example 2: Working with the ig_clone DB - Prevent self follows
+
+DELIMITER $$
+
+CREATE TRIGGER example_cannot_follow_self
+     BEFORE INSERT ON follows FOR EACH ROW
+     BEGIN
+          IF NEW.follower_id = NEW.followee_id
+          THEN
+               SIGNAL SQLSTATE '45000'
+                    SET MESSAGE_TEXT = 'Cannot follow yourself, silly';
+          END IF;
+     END;
+$$
+
+DELIMITER ;
+
+insert into follows(follower_id, followee_id) values(5,5);
+
+-- Example 3: Logging Unfollows 
+
+create table unfollows(
+follower_id int not null,
+followee_id int not null,
+created_at timestamp default now(),
+foreign key(follower_id) references users(id),
+foreign key(followee_id) references users(id),
+primary key(follower_id, followee_id)
+);
+
+DELIMITER $$
+
+CREATE TRIGGER create_unfollow
+    AFTER DELETE ON follows FOR EACH ROW 
+BEGIN
+    INSERT INTO unfollows
+    SET follower_id = OLD.follower_id,
+        followee_id = OLD.followee_id;
+END$$
+
+DELIMITER ;
+
+delete from follows where follower_id=2 and followee_id=1;
+
+select * from unfollows;
+
+SHOW TRIGGERS; 
